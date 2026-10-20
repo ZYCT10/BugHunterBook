@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Инструменты
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ОС/редакторы
+.DS_Store
+.idea/
+.vscode/
+*.swp

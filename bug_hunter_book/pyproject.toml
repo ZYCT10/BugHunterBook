@@ -1,0 +1,27 @@
+[project]
+name = "bug-hunter-lab"
+version = "1.0.0"
+description = "HunterMart — учебная лаборатория и инструменты huntkit к книге BUG HUNTER"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+# Делает пакеты huntermart/ и huntkit/ импортируемыми при запуске pytest из корня.
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "slow: тесты, запускающие локальный сервер (гонки состояний)",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["S101"]  # assert в тестах — норма
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S310"]  # учебные пароли и локальный http в тестах
+"huntermart/**" = ["S104", "S105", "S608"]  # host/секрет из конфига; намеренная учебная SQLi
