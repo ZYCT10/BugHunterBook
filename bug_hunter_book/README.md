@@ -33,8 +33,8 @@ scope программы Bug Bounty.
 
 ```bash
 # 1. Клонируйте репозиторий и перейдите в него
-git clone <URL-этого-репозитория> bug_hunter_book
-cd bug_hunter_book
+git clone https://github.com/ZYCT10/BugHunterBook.git
+cd BugHunterBook
 
 # 2. Создайте виртуальное окружение
 python3 -m venv .venv
@@ -43,6 +43,10 @@ source .venv/bin/activate            # Windows: .venv\Scripts\activate
 # 3. Установите зависимости
 pip install -r requirements.txt
 ```
+
+> `README.md`, `requirements.txt`, `pyproject.toml`, `huntkit/`, `huntermart/` и `tests/` должны
+> лежать **в корне** репозитория. Если после клонирования они оказались во вложенной папке —
+> перенесите их на уровень выше (в корень), иначе команды ниже не найдут `requirements.txt`.
 
 ## Запуск лаборатории
 

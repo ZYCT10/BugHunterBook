@@ -78,7 +78,7 @@ def create_app(settings: Settings | None = None, db_path: str = ":memory:") -> F
         token = auth.issue_token(settings.session_secret, int(row["id"]))
         return {"token": token, "role": row["role"], "user_id": str(row["id"])}
 
-    # ------------------------------------------------- Лаборатория IDOR (гл. 16/17)
+    # ------------------------------------------------- Лаборатория IDOR (глава 6)
     @app.get("/api/orders/{order_id}")
     def get_order(
         order_id: int,
@@ -197,7 +197,7 @@ def create_app(settings: Settings | None = None, db_path: str = ":memory:") -> F
         )
         return HTMLResponse(content=body)
 
-    # ------------------------------------------------ Лаборатория SQLi (гл. 23)
+    # ------------------------------------------------ Лаборатория SQLi (глава 7)
     @app.get("/api/products/search")
     def search_products(q: str) -> dict[str, object]:
         """Поиск товаров по подстроке названия.

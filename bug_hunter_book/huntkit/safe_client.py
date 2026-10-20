@@ -1,6 +1,6 @@
 """huntkit.safe_client — HTTP-клиент исследователя с обязательным allowlist.
 
-Проект №1 из части VII. Это фундамент, на котором строятся остальные инструменты книги.
+Инструмент из главы 12. Это фундамент, на котором строятся остальные инструменты книги.
 
 ПРИНЦИП БЕЗОПАСНОСТИ. Инструмент НИКОГДА не обращается к произвольной цели. Любой запрос
 разрешён, только если хост (и порт) входят в явный allowlist, который задаёт сам исследователь.
@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from types import TracebackType
 from typing import Self
@@ -158,14 +159,20 @@ class SafeHTTPClient:
     def close(self) -> None:
         self._client.close()
 
-    def request(self, method: str, url: str) -> httpx.Response:
-        """Выполняет запрос с ручной обработкой редиректов и проверкой каждого хопа."""
+    def request(
+        self, method: str, url: str, headers: Mapping[str, str] | None = None
+    ) -> httpx.Response:
+        """Выполняет запрос с ручной обработкой редиректов и проверкой каждого хопа.
+
+        headers — дополнительные заголовки запроса (например, Authorization с токеном роли);
+        объединяются с заголовками клиента по умолчанию.
+        """
         current = url
         for hop in range(self.max_redirects + 1):
             target = self.allowlist.check(current)  # бросит DisallowedTargetError вне allowlist
             self._limiter.wait(target.key())
             logger.info("%s %s", method, current)
-            response = self._client.request(method, current)
+            response = self._client.request(method, current, headers=headers)
             if response.is_redirect and response.has_redirect_location:
                 location = str(response.next_request.url) if response.next_request else ""
                 if not location:
@@ -177,5 +184,5 @@ class SafeHTTPClient:
             return response
         raise SafeClientError("Недостижимое состояние обработки редиректов")
 
-    def get(self, url: str) -> httpx.Response:
-        return self.request("GET", url)
+    def get(self, url: str, headers: Mapping[str, str] | None = None) -> httpx.Response:
+        return self.request("GET", url, headers=headers)
